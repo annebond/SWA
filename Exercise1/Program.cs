@@ -20,7 +20,7 @@ namespace Exercise1
 
         static void Main(string[] args)
         {
-            int inputType = 0;
+            int inputType = 0; 
             double inputValue = 0;
             double tempCelsius = 0;
             double tempFahrenheit = 0;
