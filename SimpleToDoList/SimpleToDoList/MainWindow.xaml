@@ -1,0 +1,35 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SimpleToDoList"
+        xmlns:ViewModels="clr-namespace:SimpleToDoList.ViewModels" x:Class="SimpleToDoList.MainWindow"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="500">
+    <Window.DataContext>
+        <ViewModels:MainViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Label Content="ToDo" VerticalAlignment="Center" Margin="10,0" />
+            <TextBox VerticalAlignment="Center" Width="150" Margin="10,0" Height="30" Text="{Binding NewTaskDescription}" VerticalContentAlignment="Center" />
+            <Button x:Name="button" Content="Add" VerticalAlignment="Center" Width="70" Height="30" Command="{Binding AddBtnClickedCommand}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1">
+            <DataGrid Margin="5" ItemsSource="{Binding ToDoList}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Description}" ClipboardContentBinding="{x:Null}" Header="Description"/>
+                    <DataGridCheckBoxColumn Header="Done" Binding="{Binding Done}"/>
+                </DataGrid.Columns>
+
+            </DataGrid>
+        </StackPanel>
+
+
+    </Grid>
+</Window>
