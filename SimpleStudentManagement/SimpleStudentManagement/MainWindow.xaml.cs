@@ -44,7 +44,7 @@ namespace SimpleStudentManagement
                     Alter = Convert.ToInt32(tboAlter.Text),
                     Vorname = tboVorname.Text,
                     Nachname = tboNachname.Text,
-                    Studiengang = cboStudiengang.SelectionBoxItemStringFormat,
+                    Studiengang = cboStudiengang.SelectedItem.ToString(),
                     Bezahlt = chkBezahlt.IsChecked.GetValueOrDefault()
                 });
                 UpdateStudentenDataGrid();
