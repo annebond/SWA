@@ -1,0 +1,29 @@
+### UI ###
+Window Datacontext to MainViewModel
+Grid
+	Grid.RowDefinitions
+		RowDefinition Height - definiert Höhe der 1. Row
+		Rowdefinition Height - definiert Höhe der 2. Row
+	StackPanel Grid.Row="0"
+		Label 
+		Textbox Text="{Binding NewTaskDescription}" - UI mit MainViewModel verbinden
+		Button Content="Button-Text" Command="{Binding AddBtnClickedCommand}" - UI mit MainViewModel verbinden
+	StackPanel Grid.Row="1"
+		Datagrid ItemsSource="{Binding ToDoList}" - UI mit MainViewModel verbinden
+			Datagrid.Columns - before: AutoGenerateColumns="False" on Datagrid
+		...
+
+### Model ###
+class with properties used in e.g. Datagrid
+	public String Description {get; set;}
+	+ constructor public nameofclass() {...}
+
+### ViewModels ###
+classes logic what should happen 
+	ObervableCollection-list to store properties e.g. ToDoList
+	props for button handling using the button-class e.g. AddBtnClickedCommand
+	class for button :ICommand
+		Action execute - prop and return in method
+		Func<bool> canExecute - prop and return in method
+		CommandManager.RequerySuggested += value; - in Eventhanlder
+	class for pass properties, so view is not accessing model directly e.g.ToDoVM
