@@ -20,10 +20,26 @@ class with properties used in e.g. Datagrid
 
 ### ViewModels ###
 classes logic what should happen 
-	ObervableCollection-list to store properties e.g. ToDoList
+	ObservableCollection-list to store properties e.g. ToDoList
 	props for button handling using the button-class e.g. AddBtnClickedCommand
 	class for button :ICommand
 		Action execute - prop and return in method
 		Func<bool> canExecute - prop and return in method
 		CommandManager.RequerySuggested += value; - in Eventhanlder
 	class for pass properties, so view is not accessing model directly e.g.ToDoVM
+
+	
+### Button ###
+/* dieser Teil nicht notwendig wenn in XAML
+Button btn = new Button();
+btn.Name = "btn1";
+btn.Click += btn1_Click;
+*/
+
+private void btn1_Click(object sender, RoutedEventArgs e)
+{
+    // do something
+}
+
+using mvvm light:
+RaiesPropertyChanged() is available with mvvm, to requery new values (e.g. clickCunter)
