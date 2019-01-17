@@ -1,0 +1,67 @@
+###### MVVMLIGHT ######
+DataContext="{Binding Source = {Static Resource Locator}, Path = Main}"
+
+###### BUTTON MVVMLIGHT ######
+RelayCommand clickBtnCommand;
+public RelayCommand ClickBtnCommand
+        {
+            get { return clickBtnCommand;}
+            set { clickBtnCommand = value;}
+        }
+
+public MainViewModel()
+{
+	ClickBtnCommand = new RelayCommand(new Action(ExecuteClickCount), new Func<bool>(CanExecuteClickCount));
+	//ClickBtnCommand = new RelayCommand(ExecuteClickCount, ()=> { if (Text.Length > 3) { return true; } else { return false; } });
+}
+
+private bool CanExecuteClickCount()
+{ return IsCLickable;}
+private void ExecuteClickCount()
+{ ClickCounter++;}
+
+###### RELAYCOMMAND ######
+
+public class RelayCommand : ICommand
+{
+	Action<object> execute;
+	Func<oject, bool> canExecute;
+	
+	public RelayCommand(Func<oject, bool> canExecute, Action<object> execute)
+	{
+		this.execute = execute;
+		this.canExecute = canExecute;
+	}
+
+public bool CanExecute(object parameter)
+{ 	return can Execute(parameter);}
+
+public void Execute(object parameter)
+{ 
+	if(canExecute(parameter))
+	{ 	execute(parameter);	}
+}
+
+event EventHandler ICommand.CanExecuteChanged
+{ 
+	add { CommandManager.RequerySuggested += value; }
+	remove { CommandManager.RequerySuggested -= value; }
+}
+
+private RelayCommand addBtnClickedCommand; //fullprop
+private RelayCommand AddBtnClickedCommand
+{
+	get {return addBtnClickedCommand;}
+	set {addBtnClickedCommand = value;}
+}
+
+Command="{Binding AddBtnClickedCommand}" //XAML
+AddBtnClickedCommand = New RelayCommand(new Action (AddButtonClicked), new Func<object>(canExecute)); //Main
+private bool CanExecute()
+{
+	return true;
+}
+private void AddButtonClicked()
+{
+	List.Add(...); //logic what happens when button is clicked
+}

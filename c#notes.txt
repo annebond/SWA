@@ -1,5 +1,9 @@
 ### UI ###
-Window Datacontext to MainViewModel
+Window.Datacontext
+	<ViewModel:MainViewModel/>
+	+ namespace  xmlns:Folder="clr-namespace:ProjectName.Folder" x:Class="ProjectName.class"
+Window.Resources
+	<Converter:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
 Grid
 	Grid.RowDefinitions
 		RowDefinition Height - definiert Höhe der 1. Row
@@ -12,7 +16,7 @@ Grid
 		Datagrid ItemsSource="{Binding ToDoList}" - UI mit MainViewModel verbinden
 			Datagrid.Columns - before: AutoGenerateColumns="False" on Datagrid
 		...
-
+		
 ### Model ###
 class with properties used in e.g. Datagrid
 	public String Description {get; set;}
@@ -21,25 +25,24 @@ class with properties used in e.g. Datagrid
 ### ViewModels ###
 classes logic what should happen 
 	ObservableCollection-list to store properties e.g. ToDoList
-	props for button handling using the button-class e.g. AddBtnClickedCommand
-	class for button :ICommand
-		Action execute - prop and return in method
-		Func<bool> canExecute - prop and return in method
-		CommandManager.RequerySuggested += value; - in Eventhanlder
+	class for button RelayCommand e.g. AddBtnClickedCommand + RaisePropertyChanged() in setter
 	class for pass properties, so view is not accessing model directly e.g.ToDoVM
-
+	new BitmapImage(new Uri("Images/icon.jpg", UriKind.Relative))
 	
 ### Button ###
-/* dieser Teil nicht notwendig wenn in XAML
-Button btn = new Button();
-btn.Name = "btn1";
-btn.Click += btn1_Click;
-*/
+event EventHandler ICommand.CanExecuteChanged
+{ add 
+	{
+	CommandManager.RequerySuggested += value; ...	
 
-private void btn1_Click(object sender, RoutedEventArgs e)
-{
-    // do something
-}
-
-using mvvm light:
-RaiesPropertyChanged() is available with mvvm, to requery new values (e.g. clickCunter)
+### Server-Client ###
+New Socket
+	AddressFamily.InterNetwork
+	SocketType.Stream
+	ProtocolType.Tcp
+socket.Bind
+	new IPEndPoint (IPAddress.Loopback, 8055)
+socket.Listen(5)
+socket.Accept() // to accept client socket on server
+socket.send(Enconding.ASCII.GetBytes(message)) // send data
+socket.receive // to receive on server from a client, call method incl receive in main program
