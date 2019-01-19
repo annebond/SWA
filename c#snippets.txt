@@ -1,8 +1,61 @@
+###### LIST with IMAGES ######
+public ObservableCollection<LegoItemVm> Items { get; set; }
+	public MainViewModel()
+    {
+		Items = new ObservableCollection<LegoItemVm>
+		{
+			new LegoItemVm("Digger", 300, "10+", new BitmapImage(new Uri("Images/bagger.jpg", UriKind.Relative))),
+			new LegoItemVm("DeathStart", 500, "20+", new BitmapImage(new Uri("Images/todesstern.jpg", UriKind.Relative))),
+
+//XAML
+<ListBox ItemsSource="{Binding Items}" DisplayMemberPath="Description"></ListBox>
+			
+###### XAML ######
+xmlns:ViewModel="clr-namespace:ProjectName.ViewModel"
+<Window.DataContext>
+	<ViewModel:MainViewModel></ViewModel:MainViewModel>
+</Window.DataContext>
+using CommonServiceLocator; //Microsoft.Practices.ServiceLocation;
+
+###### CONVERTER ######
+class BoolToBrushConverter : IValueConverter
+    {
+        static Brush green = new SolidColorBrush(Colors.Green);
+        static Brush orange = new SolidColorBrush(Colors.OrangeRed);
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool temp = (bool)value; //casten
+            if (temp)
+            { return green;}
+            return orange;
+        }
+		
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+// in XAML
+xmlns:Converter="clr-namespace:Sample1.Converter"
+<Window.Resources>
+	<Converter:BoolToBrushConverter x:Key="BoolToBrushConverter"></Converter:BoolToBrushConverter>
+<Ellipse Height="30" Width="30" Fill="{Binding Toggle2, Converter={StaticResource BoolToBrushConverter}}"></Ellipse>
+
 ###### MVVMLIGHT ######
 DataContext="{Binding Source = {Static Resource Locator}, Path = Main}"
 
 ###### BUTTON MVVMLIGHT ######
+
+private int clickCounter =0;
+public int ClickCounter
+{
+	get { return clickCounter; }
+	set { clickCounter = value; RaisePropertyChanged("ClickCounter"); }
+}
+
 RelayCommand clickBtnCommand;
+
 public RelayCommand ClickBtnCommand
         {
             get { return clickBtnCommand;}
@@ -19,6 +72,72 @@ private bool CanExecuteClickCount()
 { return IsCLickable;}
 private void ExecuteClickCount()
 { ClickCounter++;}
+
+Command="{Binding ClickBtnCommand}"
+
+###### SIMPLE TCP CHAT ######
+class Server
+{
+private Socket serverSock, clientSock;
+private byte[] buffer = new byte[512];
+public Server()
+{
+	serverSock = new Socket(
+		AddressFamily.InterNetwork,
+		SocketType.Stream,
+		ProtocolType.Tcp);
+	Console.WriteLine("Socket created");
+	serverSock.Bind(
+	  new IPEndPoint(IPAddress.Loopback, 8055));
+	Console.WriteLine("Binding done");
+	serverSock.Listen(5);
+	Console.WriteLine("Listening started");
+	clientSock = serverSock.Accept(); //new client accepted
+}
+
+public void StartReceiving()
+{
+	while (true)
+	{
+		int length = clientSock.Receive(buffer);
+		string temp = Encoding.UTF8.GetString(buffer, 0, length);
+		Console.Write(temp);
+	}
+}
+
+//in program
+Server server = new Server();
+server.StartReceiving();
+Console.ReadLine();
+
+###### RANDOM RAISEPROPERTY ######
+static Random rand = new Random();
+private int randomNumber = 100;
+DispatcherTimer timer = new DispatcherTimer();     
+
+public int RandomNumber
+{
+	get { return randomNumber; }
+	set { randomNumber = value; RaisePropertyChanged();  }
+}
+
+public int CallerMemberName { get; private set; }
+public MainViewModel()
+{
+	timer.Interval = new TimeSpan(0, 0, 3);
+	timer.Tick += Timer_Tick;
+	timer.Start();
+   
+}
+
+private void Timer_Tick(object sender, EventArgs e)
+{
+	RandomNumber = rand.Next(0,100);
+}
+
+//XAML
+<Label Content="Random Number" Margin="10" Height="25"/>
+<TextBox  Margin="10" Height="25" Width="150" VerticalAlignment="Center" Text="{Binding RandomNumber}"/>
 
 ###### RELAYCOMMAND ######
 

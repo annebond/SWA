@@ -10,13 +10,20 @@ Grid
 		Rowdefinition Height - definiert Höhe der 2. Row
 	StackPanel Grid.Row="0"
 		Label 
-		Textbox Text="{Binding NewTaskDescription}" - UI mit MainViewModel verbinden
+		Textbox Text="{Binding NewTaskDescription, UpdateSourceTrigger=PropertyChanged}" - UI mit MainViewModel verbinden, nicht nur bei focus-wechsel
 		Button Content="Button-Text" Command="{Binding AddBtnClickedCommand}" - UI mit MainViewModel verbinden
 	StackPanel Grid.Row="1"
 		Datagrid ItemsSource="{Binding ToDoList}" - UI mit MainViewModel verbinden
 			Datagrid.Columns - before: AutoGenerateColumns="False" on Datagrid
 		...
-		
+### Binding ###
+<TextBox Text="{Binding currentItem.Description}"
+<Image Source="{Binding currentItem.Image}"
+<ListBox ItemsSource="{Binding Items}"
+<Button Command="{Binding AddBtnClickedCommand}"
+<DataGrid ItemsSource="{Binding ToDoList}" 
+	<DataGridTextColumn Binding="{Binding Description}" 
+
 ### Model ###
 class with properties used in e.g. Datagrid
 	public String Description {get; set;}
@@ -28,12 +35,13 @@ classes logic what should happen
 	class for button RelayCommand e.g. AddBtnClickedCommand + RaisePropertyChanged() in setter
 	class for pass properties, so view is not accessing model directly e.g.ToDoVM
 	new BitmapImage(new Uri("Images/icon.jpg", UriKind.Relative))
-	
+
+using CommonServiceLocator //Microsoft.Practices.ServiceLocation umschreiben;
+
 ### Button ###
 event EventHandler ICommand.CanExecuteChanged
-{ add 
-	{
-	CommandManager.RequerySuggested += value; ...	
+{ 
+	add { CommandManager.RequerySuggested += value; } ...
 
 ### Server-Client ###
 New Socket
@@ -46,3 +54,11 @@ socket.Listen(5)
 socket.Accept() // to accept client socket on server
 socket.send(Enconding.ASCII.GetBytes(message)) // send data
 socket.receive // to receive on server from a client, call method incl receive in main program
+
+### Templates ###
+Datatemplate
+<ListBox ItemSource="{Binding Items}">
+	<ListBox.ItemTemplate>
+		<DataTemplate>
+			<Border ...>
+				<Image Source="{Binding Image}"/>

@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
             <Label Content="ToDo" VerticalAlignment="Center" Margin="10,0" />
-            <TextBox VerticalAlignment="Center" Width="150" Margin="10,0" Height="30" Text="{Binding NewTaskDescription}" VerticalContentAlignment="Center" />
+            <TextBox VerticalAlignment="Center" Width="150" Margin="10,0" Height="30" Text="{Binding NewTaskDescription, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" />
             <Button x:Name="button" Content="Add" VerticalAlignment="Center" Width="70" Height="30" Command="{Binding AddBtnClickedCommand}"/>
         </StackPanel>
         <StackPanel Grid.Row="1">
