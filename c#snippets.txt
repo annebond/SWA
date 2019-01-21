@@ -1,3 +1,52 @@
+###### XAML ######
+xmlns:ViewModel="clr-namespace:ProjectName.ViewModel"
+<Window.DataContext>
+	<ViewModel:MainViewModel></ViewModel:MainViewModel>
+</Window.DataContext>
+using CommonServiceLocator; //Microsoft.Practices.ServiceLocation;
+
+###### XAML LIST TEMPLATES ######
+<ListBox Grid.Column="1" ItemsSource="{Binding Items}">
+	<ListBox.ItemTemplate>
+		<DataTemplate>
+			<Border Height="70" Width="200" BorderBrush="Blue" BorderThickness="2" CornerRadius="4">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="50"></ColumnDefinition>
+						<ColumnDefinition Width="*"></ColumnDefinition>
+						<ColumnDefinition Width="50"></ColumnDefinition>
+					</Grid.ColumnDefinitions>
+					<Image Source="{Binding Image}"></Image>
+					<StackPanel Grid.Column="1" Margin="3">
+						<Label Content="{Binding Description}"></Label>
+						<Label Content="{Binding NoOfParts}"></Label>
+					</StackPanel>
+					...
+	<ListBox.ItemsPanel>
+		<ItemsPanelTemplate>
+			<StackPanel Orientation="Horizontal"></StackPanel>
+		</ItemsPanelTemplate>
+	</ListBox.ItemsPanel>
+###### CONVERTER ######
+class BoolToBrushConverter : IValueConverter
+{
+	static Brush green = new SolidColorBrush(Colors.Green);
+	static Brush orange = new SolidColorBrush(Colors.OrangeRed);
+
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+	{
+		bool temp = (bool)value; //casten
+		if (temp) {return green;}
+		return orange;
+	}
+
+	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+	{ throw new NotImplementedException();}
+}
+<StackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="10">
+	<Button Content="Toggle1" Height="25" Width="100" Margin="10" Command="{Binding ToggleBtnClickedCmd}" CommandParameter="1" Visibility="{Binding ActAsServer, Converter={StaticResource BoolToVisibilityConverter}}"></Button>
+	<Ellipse Height="30" Width="30" Fill="{Binding Toggle1, Converter={StaticResource BoolToBrushConverter}}"></Ellipse>
+</StackPanel>				
 ###### LIST with IMAGES ######
 public ObservableCollection<LegoItemVm> Items { get; set; }
 	public MainViewModel()
@@ -9,13 +58,6 @@ public ObservableCollection<LegoItemVm> Items { get; set; }
 
 //XAML
 <ListBox ItemsSource="{Binding Items}" DisplayMemberPath="Description"></ListBox>
-			
-###### XAML ######
-xmlns:ViewModel="clr-namespace:ProjectName.ViewModel"
-<Window.DataContext>
-	<ViewModel:MainViewModel></ViewModel:MainViewModel>
-</Window.DataContext>
-using CommonServiceLocator; //Microsoft.Practices.ServiceLocation;
 
 ###### CONVERTER ######
 class BoolToBrushConverter : IValueConverter
@@ -75,41 +117,91 @@ private void ExecuteClickCount()
 
 Command="{Binding ClickBtnCommand}"
 
-###### SIMPLE TCP CHAT ######
+###### TCP ######
+// MainViewModel
+private void MsgReceived(byte[] obj)
+	{
+		App.Current.Dispatcher.Invoke(() => 
+            {
+                Toggle1 = Convert.ToBoolean(obj[0]);
+                History.Add("Toggle1: " + Toggle1 + "...");
+				...
+            });
+
+###### TCP CLIENT ######
+class Client
+    {
+
+        // Action brauche ich damit ich definiere was passiert wenn mal was daher kommt -> in MainViewModel gebe ich MsgReceived als Action mit
+        Socket sock;
+        private byte[] buffer = new byte[10];
+        private Action<byte[]> informer; 
+
+        public Client(Action<byte[]> informer)
+        {
+            this.informer = informer;
+            TcpClient cl = new TcpClient();
+            cl.Connect(new IPEndPoint(IPAddress.Loopback, 9090));
+            sock = cl.Client;
+            Task.Factory.StartNew(Receive);
+        }
+
+        private void Receive()
+        {
+            int length;
+            while (true)
+            {
+                length = sock.Receive(buffer);
+                byte[] temp = new byte[length];
+                Array.Copy(buffer,temp,length);
+                informer(temp);
+            }
+        }
+    }
+###### TCP SERVER ######
 class Server
 {
-private Socket serverSock, clientSock;
-private byte[] buffer = new byte[512];
-public Server()
-{
-	serverSock = new Socket(
-		AddressFamily.InterNetwork,
-		SocketType.Stream,
-		ProtocolType.Tcp);
-	Console.WriteLine("Socket created");
-	serverSock.Bind(
-	  new IPEndPoint(IPAddress.Loopback, 8055));
-	Console.WriteLine("Binding done");
-	serverSock.Listen(5);
-	Console.WriteLine("Listening started");
-	clientSock = serverSock.Accept(); //new client accepted
-}
+	private Socket socket;
+	private List<Clienthandler> clients = new List<Clienthandler> ();
 
-public void StartReceiving()
-{
-	while (true)
+	public Server()
 	{
-		int length = clientSock.Receive(buffer);
-		string temp = Encoding.UTF8.GetString(buffer, 0, length);
-		Console.Write(temp);
+		socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+		socket.Bind(new IPEndPoint(IPAddress.Loopback, 9090));
+		socket.Listen(10); 
+		Task.Factory.StartNew(AcceptClients);
 	}
-}
 
-//in program
-Server server = new Server();
-server.StartReceiving();
-Console.ReadLine();
+	public void AcceptClients()
+	{
+		while (true)
+		{
+			clients.Add(new Clienthandler(socket.Accept()));
+		}
+	}
+	public void SendToAllClients(byte[] data)
+	{
+		foreach (var item in clients)
+		{
+			item.SendData(data);
+		}
+	}
 
+###### TCP CLIENT-HANDLER ######	
+internal class Clienthandler //internal nicht relevant - es geht nur darum wer die klasse verwenden kann
+    {
+        private Socket socket;
+
+        public Clienthandler(Socket accept)
+        {
+            this.socket = accept;
+        }
+
+        public void SendData(byte[] data)
+        {
+            socket.Send(data);
+        }
+    }
 ###### RANDOM RAISEPROPERTY ######
 static Random rand = new Random();
 private int randomNumber = 100;

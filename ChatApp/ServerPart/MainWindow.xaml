@@ -1,0 +1,72 @@
+﻿<Window x:Class="ServerPart.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ServerPart"
+        xmlns:ViewModel ="clr-namespace:ServerPart.ViewModel"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+        <Window.DataContext>
+            <ViewModel:MainViewModel/>
+        </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+            <Button Command="{Binding StartBtnClickCommand}" Content="Start" Margin="10" Width="80"></Button>
+            <Button Command="{Binding StopBtnClickCommand}" Content="Stop" Margin="10" Width="80"></Button>
+        </StackPanel>
+        <TabControl Grid.Row="1" Margin="10">
+            <TabItem Header="Chat">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                        <ColumnDefinition Width="3*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="40"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label Content="Connected Users" Grid.Row="0" VerticalAlignment="Center" Margin="10,5"></Label>
+                    <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
+                        <Label Content="Received Messages" VerticalAlignment="Center" Margin="10,5"></Label>
+                        <Label VerticalAlignment="Center" Margin="5"></Label>
+                    </StackPanel>
+                    <ListBox ItemsSource="{Binding Users}" Grid.Row="1" Margin="10"></ListBox>
+                    <Button Command="{Binding DropBtnClickCommand}" Grid.Row="2" Margin="10" Width="80" HorizontalAlignment="Right" Content="Drop"></Button>
+                    <ListBox ItemsSource="{Binding Messages}" Grid.Row="1" Grid.Column="1" Margin="10"></ListBox>
+                    <Button Grid.Row="2" Grid.Column="1" Margin="10" Width="80" HorizontalAlignment="Right" Content="Save to Log"></Button>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Logs">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                        <ColumnDefinition Width="3*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="40"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label Content="Log files" Grid.Row="0" VerticalAlignment="Center" Margin="10,5"></Label>
+                    <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
+                        <Label Content="Received Messages" VerticalAlignment="Center" Margin="10,5"></Label>
+                        <Label VerticalAlignment="Center" Margin="5"></Label>
+                    </StackPanel>
+                    <ListBox Grid.Row="1" Margin="10"></ListBox>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" >
+                        <Button Margin="10" Width="60" Content="Show"></Button>
+                        <Button Margin="10" Width="60" Content="Drop"></Button>
+                    </StackPanel>
+                    <ListBox Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Margin="10"></ListBox>
+                    
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
