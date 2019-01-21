@@ -4,6 +4,10 @@ Window.Datacontext
 	+ namespace  xmlns:Folder="clr-namespace:ProjectName.Folder" x:Class="ProjectName.class"
 Window.Resources
 	<Converter:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
+Tabcontrol
+	TabItem
+		Grid
+	TabItem
 Grid
 	Grid.RowDefinitions
 		RowDefinition Height - definiert Höhe der 1. Row

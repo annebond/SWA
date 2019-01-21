@@ -27,7 +27,11 @@ using CommonServiceLocator; //Microsoft.Practices.ServiceLocation;
 			<StackPanel Orientation="Horizontal"></StackPanel>
 		</ItemsPanelTemplate>
 	</ListBox.ItemsPanel>
+
 ###### CONVERTER ######
+<Window.Resources>
+	<Converter:BoolToBrushConverter x:Key="BoolToBrushConverter"></Converter:BoolToBrushConverter>
+
 class BoolToBrushConverter : IValueConverter
 {
 	static Brush green = new SolidColorBrush(Colors.Green);
@@ -43,10 +47,12 @@ class BoolToBrushConverter : IValueConverter
 	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 	{ throw new NotImplementedException();}
 }
+//xaml
 <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="10">
 	<Button Content="Toggle1" Height="25" Width="100" Margin="10" Command="{Binding ToggleBtnClickedCmd}" CommandParameter="1" Visibility="{Binding ActAsServer, Converter={StaticResource BoolToVisibilityConverter}}"></Button>
 	<Ellipse Height="30" Width="30" Fill="{Binding Toggle1, Converter={StaticResource BoolToBrushConverter}}"></Ellipse>
-</StackPanel>				
+</StackPanel>	
+			
 ###### LIST with IMAGES ######
 public ObservableCollection<LegoItemVm> Items { get; set; }
 	public MainViewModel()
