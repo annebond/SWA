@@ -1,9 +1,6 @@
 ###### XAML ######
-xmlns:ViewModel="clr-namespace:ProjectName.ViewModel"
-<Window.DataContext>
-	<ViewModel:MainViewModel></ViewModel:MainViewModel>
-</Window.DataContext>
 using CommonServiceLocator; //Microsoft.Practices.ServiceLocation;
+aus Locator rauskopieren: DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
 
 ###### XAML LIST TEMPLATES ######
 <ListBox Grid.Column="1" ItemsSource="{Binding Items}">
@@ -63,32 +60,7 @@ public ObservableCollection<LegoItemVm> Items { get; set; }
 			new LegoItemVm("DeathStart", 500, "20+", new BitmapImage(new Uri("Images/todesstern.jpg", UriKind.Relative))),
 
 //XAML
-<ListBox ItemsSource="{Binding Items}" DisplayMemberPath="Description"></ListBox>
-
-###### CONVERTER ######
-class BoolToBrushConverter : IValueConverter
-    {
-        static Brush green = new SolidColorBrush(Colors.Green);
-        static Brush orange = new SolidColorBrush(Colors.OrangeRed);
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            bool temp = (bool)value; //casten
-            if (temp)
-            { return green;}
-            return orange;
-        }
-		
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-// in XAML
-xmlns:Converter="clr-namespace:Sample1.Converter"
-<Window.Resources>
-	<Converter:BoolToBrushConverter x:Key="BoolToBrushConverter"></Converter:BoolToBrushConverter>
-<Ellipse Height="30" Width="30" Fill="{Binding Toggle2, Converter={StaticResource BoolToBrushConverter}}"></Ellipse>
+//<ListBox ItemsSource="{Binding Items}" DisplayMemberPath="Description"></ListBox>
 
 ###### MVVMLIGHT ######
 DataContext="{Binding Source = {Static Resource Locator}, Path = Main}"

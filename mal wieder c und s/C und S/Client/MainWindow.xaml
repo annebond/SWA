@@ -1,0 +1,18 @@
+﻿<Window x:Class="Client.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
+    <Grid>
+        <Button Command="{Binding Btnsend}" Content="Send to Server" HorizontalAlignment="Left" Margin="39,51,0,0" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="39,86,0,0" TextWrapping="Wrap" Text="{Binding Textsend}" VerticalAlignment="Top" Width="120" RenderTransformOrigin="-0.189,0.638"/>
+        <Label Content="Client" HorizontalAlignment="Left" Margin="39,10,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="185,86,0,0" TextWrapping="Wrap" Text="{Binding Receivedtext}" VerticalAlignment="Top" Width="120" RenderTransformOrigin="-0.189,0.638"/>
+        <Label Content="Receive from Server" HorizontalAlignment="Left" Margin="185,51,0,0" VerticalAlignment="Top" Width="120"/>
+
+    </Grid>
+</Window>
